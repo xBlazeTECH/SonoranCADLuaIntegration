@@ -51,6 +51,11 @@ function infoLog(message)
     sendConsole("INFO", "^5", message)
 end
 
+exports('debugLog', debugLog)
+exports('errorLog', errorLog)
+exports('warnLog', warnLog)
+exports('infoLog', infoLog)
+
 --RegisterServerEvent("SonoranCAD::core:writeLog")
 AddEventHandler("SonoranCAD::core:writeLog", function(level, message)
     if level == "debug" then
