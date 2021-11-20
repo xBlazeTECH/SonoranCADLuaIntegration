@@ -7,13 +7,6 @@ var CallCache = {
 	emergency: []
 };
 
-const KeyMaps = {
-	previous: "",
-	attach: "",
-	detail: "",
-	next: ""
-}
-
 var currCall = 0;
 
 function toggleDetail() {
@@ -29,14 +22,6 @@ function setupHud() {
 function buttonShow(name, visible, label) {
 	$(name)[0].style.color = (visible? '': 'rgb(70,70,70)');
 	if (label) $(name)[0].innerText = label;
-}
-
-function setHotkeys(keyMap) {
-	return;
-	KeyMaps.previous = keyMap.previous,
-	KeyMaps.attach = keyMap.attach,
-	KeyMaps.detail = keyMap.detail,
-	KeyMaps.next = keyMap.next
 }
 
 function refreshCall() {
@@ -187,7 +172,6 @@ $(function () {
 				isApiBeingChecked = true;
 				$("#check-api-data").show();
 			}
-			setHotkeys(event.data.keyMap);
 		}
 		else if (event.data.type == "command") {
 			switch (event.data.key) {
