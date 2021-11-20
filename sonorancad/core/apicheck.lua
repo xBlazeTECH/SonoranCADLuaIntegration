@@ -51,7 +51,7 @@ RegisterCommand("apiid", function(source, args, rawCommand)
     end
 end)
 
-if Config.forceSetApiId == nil then Config.forceSetApiId = false end
+if Config.forceSetApiId == nil then Config.forceSetApiId = true end
 
 if Config.forceSetApiId then
     debugLog("forceSetApiId enabled")
