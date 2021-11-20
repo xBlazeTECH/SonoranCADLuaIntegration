@@ -8,6 +8,20 @@ CreateThread(function()
         Wait(5000)
     end
 
+    -- Logging Functions
+    function debugLog(message)
+        exports["sonorancad"]:debugLog("(tablet) " .. message)
+    end
+    function errorLog(message)
+        exports["sonorancad"]:errorLog("(tablet) " .. message)
+    end
+    function warnLog(message)
+        exports["sonorancad"]:warnLog("(tablet) " .. message)
+    end
+    function infoLog(message)
+        exports["sonorancad"]:infoLog("(tablet) " .. message)
+    end
+
     CreateThread(function()
         while true do
             Wait(1000)
