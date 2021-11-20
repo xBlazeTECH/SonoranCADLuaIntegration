@@ -19,9 +19,19 @@ Citizen.CreateThread(function()
 	-- Set Default Module Sizes
 	InitModuleSize("cad")
 	InitModuleSize("hud")
-
-	SetModuleUrl("cad", GetConvar("sonorantablet_cadUrl", 'https://app.sonorancad.com/#/?comid='..GetConvar("sonoran_communityID", "")))
-
+	if GetConvar("sonoran_mode", "development") ~= "production" then
+		if GetConvar("sonoran_communityID", "") ~= "" then
+			SetModuleUrl("cad", 'https://cad.dev.sonoransoftware.com/#/?comid='..GetConvar("sonoran_communityID", ""))
+		else
+			SetModuleUrl("cad", 'https://cad.dev.sonoransoftware.com/#/')
+		end
+	else
+		if GetConvar("sonoran_communityID", "") ~= "" then
+			SetModuleUrl("cad", 'https://app.sonorancad.com/#/?comid='..GetConvar("sonoran_communityID", ""))
+		else
+			SetModuleUrl("cad", 'https://app.sonorancad.com/#/')
+		end
+	end
 	-- Disable Controls Loop
 	while true do
 		if nuiFocused then	-- Disable controls while NUI is focused.
