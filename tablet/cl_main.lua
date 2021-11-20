@@ -4,13 +4,18 @@ usingTablet = false
 myident = nil
 isMiniVisible = false
 
--- Debugging Information
-isDebugging = true
-
-function DebugMessage(message, module)
-	if not isDebugging then return end
-	if module ~= nil then message = "[" .. module .. "] " .. message end
-	print(message .. "\n")
+-- Logging Functions
+function debugLog(message)
+	exports["sonorancad"]:debugLog("(tablet) " .. message)
+end
+function errorLog(message)
+	exports["sonorancad"]:errorLog("(tablet) " .. message)
+end
+function warnLog(message)
+	exports["sonorancad"]:warnLog("(tablet) " .. message)
+end
+function infoLog(message)
+	exports["sonorancad"]:infoLog("(tablet) " .. message)
 end
 
 -- Initialization Procedure
@@ -49,7 +54,7 @@ function InitModuleSize(module)
 	local moduleWidth = GetResourceKvpString(module .. "width")
 	local moduleHeight = GetResourceKvpString(module .. "height")
 	if moduleWidth ~= nil and moduleHeight ~= nil then
-		DebugMessage("retrieving saved presets", module)
+		debugLog("retrieving saved presets", module)
 		-- Send message to NUI to resize the specified module.
 		SetModuleSize(module, moduleWidth, moduleHeight)
 		SendNUIMessage({
@@ -61,9 +66,9 @@ end
 
 -- Set a Module's Size
 function SetModuleSize(module, width, height)
-	DebugMessage(("MODULE %s SIZE %s - %s"):format(module, width, height))
+	debugLog(("MODULE %s SIZE %s - %s"):format(module, width, height))
 	-- Send message to NUI to resize the specified module.
-	DebugMessage("sending resize message to nui", module)
+	debugLog("sending resize message to nui", module)
 	SendNUIMessage({
 		type = "resize",
 		module = module,
@@ -71,14 +76,14 @@ function SetModuleSize(module, width, height)
 		newHeight = height
 	})
 
-	DebugMessage("saving module size to kvp")
+	debugLog("saving module size to kvp")
 	SetResourceKvp(module .. "width", width)
 	SetResourceKvp(module .. "height", height)
 end
 
 -- Refresh a Module
 function RefreshModule(module)
-	DebugMessage("sending refresh message to nui", module)
+	debugLog("sending refresh message to nui", module)
 	SendNUIMessage({
 		type = "refresh",
 		module = module
@@ -87,7 +92,7 @@ end
 
 -- Display a Module
 function DisplayModule(module, show)
-	DebugMessage("sending display message to nui "..tostring(show), module)
+	debugLog("sending display message to nui "..tostring(show), module)
 	if not isRegistered then apiCheck = true end
 	SendNUIMessage({
 		type = "display",
@@ -102,7 +107,7 @@ end
 
 -- Set Module URL (for iframes)
 function SetModuleUrl(module, url)
-	DebugMessage("sending url update message to nui", module)
+	debugLog("sending url update message to nui", module)
 	SendNUIMessage({
 		type = "setUrl",
 		url = url,
@@ -161,7 +166,7 @@ end, false)
 RegisterKeyMapping('minicadp', 'Previous Call', 'keyboard', 'LEFT')
 
 RegisterCommand("minicada", function(source, args, rawCommand)
-	print("ismini "..tostring(isMiniVisible))
+	debugLog("ismini "..tostring(isMiniVisible))
 	if not isMiniVisible then return end
 	SendNUIMessage({ type = "command", key="attach" })
 end, false)
@@ -241,7 +246,7 @@ end
 -- Mini-Cad Callbacks
 RegisterNUICallback('AttachToCall', function(data, cb)
 	--Debug Only
-	--print("cl_main -> sv_main: SonoranCAD::mini:AttachToCall")
+	debugLog("cl_main -> sv_main: SonoranCAD::mini:AttachToCall")
 	TriggerServerEvent("SonoranCAD::mini:AttachToCall", data.callId)
 	cb({ ok = true })
 end)
@@ -249,7 +254,7 @@ end)
 -- Mini-Cad Callbacks
 RegisterNUICallback('DetachFromCall', function(data, cb)
 	--Debug Only
-	--print("cl_main -> sv_main: SonoranCAD::mini:DetachFromCall")
+	debugLog("cl_main -> sv_main: SonoranCAD::mini:DetachFromCall")
 	TriggerServerEvent("SonoranCAD::mini:DetachFromCall", data.callId)
 	cb({ ok = true })
 end)
@@ -267,8 +272,8 @@ end)
 RegisterNetEvent("SonoranCAD::mini:CallSync")
 AddEventHandler("SonoranCAD::mini:CallSync", function(CallCache, EmergencyCache)
 	--Debug Only
-	--print("sv_main -> cl_main: SonoranCAD::mini:CallSync")
-	--print(json.encode(CallCache))
+	--debugLog("sv_main -> cl_main: SonoranCAD::mini:CallSync")
+	--debugLog(json.encode(CallCache))
 	SendNUIMessage({
 		type = 'callSync',
 		ident = myident,
